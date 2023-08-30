@@ -1217,7 +1217,7 @@ class UNetConditional1d(UNet1d):
         embedding: Tensor,
         embedding_scale: Optional[float] = None,
         embedding_mask_proba: float = 0.0,
-        negative_embedding: Optional[Tensor] = None,
+        embedding_neg: Optional[Tensor] = None,
         **kwargs,
     ) -> Tensor:
         b, device = embedding.shape[0], embedding.device
@@ -1234,7 +1234,7 @@ class UNetConditional1d(UNet1d):
 
         if embedding_scale is not None:
             # Scale conditional output using classifier-free guidance
-            uncond_embedding = negative_embedding if negative_embedding is not None else fixed_embedding
+            uncond_embedding = embedding_neg if embedding_neg is not None else fixed_embedding
             uncond_out = super().forward(x, time, embedding=uncond_embedding, **kwargs)
             out = (1 + embedding_scale) * out - embedding_scale * uncond_out
 
